@@ -31,7 +31,7 @@ private:
 void print_bst_level_order(Node *node){
     std::vector<Node> nodes_list;
     std::vector<std::vector<Node>> levels_list;
-    std::vector<char> keys_list;
+    std::vector<int> keys_list;
 
     if(node != NULL){
         nodes_list.push_back(*node);
@@ -45,8 +45,8 @@ void print_bst_level_order(Node *node){
         std::cout << "Current node is: " << current_node.key << std::endl;
         std::cout << "Length of list in the beginning of itereation: " << nodes_list.size() << std::endl;
         printf("\n");
-        char current_key = '0' + current_node.key;
-        keys_list.push_back(current_key);
+        
+        keys_list.push_back(current_node.key);
 
         if (current_node.left != NULL)
         {
@@ -132,39 +132,44 @@ void left_rotate(Node *x){
 int main(){
     printf("hello\n");
     
-    Node *n5 = new Node;
+    Node *n5 = new Node; // root node --> 5
     n5->key = 5;
-    Node *n6 = new Node;
-    n6->key = 6;
-    n5->right = n6;
-    n6->parent = n5;
+    Node *n10 = new Node; // 10 --> right of 5
+    n10->key = 10;
+    n5->right = n10;
+    n10->parent = n5;
 
-    Node *rotator = new Node;
-    rotator->key = 1;
-    rotator->parent = n5;
-    n5->left = rotator;
-
-    Node *n0 = new Node;
-    n0->key = 0;
-    n0->parent = rotator;
-    rotator->left = n0;
-
-    Node *n2 = new Node;
+    Node *n2 = new Node;  // 2 --> left of 5
     n2->key = 2;
-    n2->parent = rotator;
-    rotator->right = n2;
+    n2->parent = n5;
+    n5->left = n2;
 
+    Node *n12 = new Node; // 12 --> right of 10
+    n12->key = 12;
+    n12->parent = n10;
+    n10->right = n12;
+
+    Node *n8 = new Node; // 8 --> left of 10
+    n8->key = 8;
+    n8->parent = n10;
+    n10->left = n8;
+
+    Node *n9 = new Node; // 9 --> right of 8
+    n9->key = 9;
+    n9->parent = n8;
+    n8->right = n9;
+
+    Node *n6 = new Node; // 6 --> left of 8
+    n6->key = 6;
+    n6->parent = n8;
+    n8->left = n6;
+
+  
     Node *t2 = new Node;
     t2->key = 2;
-
+    printf("level order in the before rotation\n");
     print_bst_level_order(n5);
-    printf("end\n");
-    printf("test null control\n");
-    if (t2->right == NULL && t2->left == NULL) {
-        std::cout << "works" << std::endl;
-    } else {
-        std::cout << "it does not work" << std::endl;
-    }
+    
     return 0;
 
 }
