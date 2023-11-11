@@ -42,35 +42,35 @@ void print_bst_level_order(Node *node){
     {
         current_node = nodes_list.at(0);
         nodes_list.erase(nodes_list.begin());
-        std::cout << "Current node is: " << current_node.key << std::endl;
-        std::cout << "Length of list in the beginning of itereation: " << nodes_list.size() << std::endl;
-        printf("\n");
+        // std::cout << "Current node is: " << current_node.key << std::endl;
+        // std::cout << "Length of list in the beginning of itereation: " << nodes_list.size() << std::endl;
+        // printf("\n");
         
         keys_list.push_back(current_node.key);
 
         if (current_node.left != NULL)
         {
-          std::cout << "Added as the left: " << current_node.left->key << std::endl;
+          // std::cout << "Added as the left: " << current_node.left->key << std::endl;
           nodes_list.push_back(*current_node.left);
-          printf("\n");
+          // printf("\n");
         }
 
         if (current_node.right != NULL)
         {
-          std::cout << "Added as the right: " << current_node.right->key << std::endl;
+          // std::cout << "Added as the right: " << current_node.right->key << std::endl;
           nodes_list.push_back(*current_node.right);
-          printf("\n");
+          // printf("\n");
         }
 
-        std::cout << "Length of list at the end of itereation: " << nodes_list.size() << std::endl;
-        printf("elements at the end of iteration \n");
-        for (size_t i = 0; i < nodes_list.size(); i++)
-        {
-          std::cout << nodes_list.at(i).key << " ";
-        }
+        // std::cout << "Length of list at the end of itereation: " << nodes_list.size() << std::endl;
+        // printf("elements at the end of iteration \n");
+        //for (size_t i = 0; i < nodes_list.size(); i++)
+        //{
+          //std::cout << nodes_list.at(i).key << " ";
+        //}
         
-        printf("\n");
-        printf("\n");
+        // printf("\n");
+        // printf("\n");
     }
 
     for (const auto& element : keys_list) {
@@ -80,6 +80,50 @@ void print_bst_level_order(Node *node){
   
 };
 
+void right_rotate(Node *x){
+  Node *left_child_of_rotator = x->left; // the left child of x
+
+  if (left_child_of_rotator != NULL)
+  {
+    // right child of x's left subtree, becomes the new left child of x
+    x->left = left_child_of_rotator->right;
+    
+    if (left_child_of_rotator->right != NULL)
+    {
+      left_child_of_rotator->parent = x;
+    }
+    // Now we are placing right child of x to x's original place
+    left_child_of_rotator->parent = x->parent;
+
+    if (x->parent != NULL)
+    {
+      Node *parent_of_x = x->parent;  // get the parent of x
+
+      x->parent = left_child_of_rotator; // make right subtree of x, a child x's parent
+
+      if (x->parent->right == x)
+      {
+        // x is the right child of its parent
+        x->parent->right = left_child_of_rotator;
+      }
+      else{
+        // x is the left child of its parent
+        x->parent->left = left_child_of_rotator;
+      }
+    }
+    else{
+      // TODO: We need to make it officially the root of the subtree!!!
+      // x is the root
+      // we make the right child of x, the new root
+      left_child_of_rotator->color = 'b';
+      // root's color must be black thus, we set the color to black
+    }
+    
+    // x is now the left the child of its previous right subtree  
+    left_child_of_rotator->right = x;
+  }
+};
+
 void left_rotate(Node *x){
   Node *right_child_of_rotator = x->right; // the right child of x
 
@@ -87,7 +131,7 @@ void left_rotate(Node *x){
   {
     // left child of x's right subtree, becomes the new right child of x
     x->right = right_child_of_rotator->left;
-
+    
     if (right_child_of_rotator->left != NULL)
     {
       right_child_of_rotator->parent = x;
@@ -110,9 +154,6 @@ void left_rotate(Node *x){
         // x is the left child of its parent
         x->parent->left = right_child_of_rotator;
       }
-
-      right_child_of_rotator->left = x;
-      // x is now the left the child of its previous right subtree  
     }
     else{
       // TODO: We need to make it officially the root of the subtree!!!
@@ -122,16 +163,12 @@ void left_rotate(Node *x){
       // root's color must be black thus, we set the color to black
     }
     
+    // x is now the left the child of its previous right subtree  
+    right_child_of_rotator->left = x;
   }
-  
-
-  
-  
 };
 
-int main(){
-    printf("hello\n");
-    
+int main(){    
     Node *n5 = new Node; // root node --> 5
     n5->key = 5;
     Node *n10 = new Node; // 10 --> right of 5
@@ -167,9 +204,28 @@ int main(){
   
     Node *t2 = new Node;
     t2->key = 2;
-    printf("level order in the before rotation\n");
+    printf("Test for left rotation\n");
+    printf("level order before rotation\n");
     print_bst_level_order(n5);
     
+    left_rotate(n5);
+    printf("level order after rotation\n");
+    print_bst_level_order(n10);
+    printf("\n");
+    std::cout << "10's right: " << n10->right->key << std::endl;
+    
+    printf("\n");
+    std::cout << "10's left: " << n10->left->key << std::endl;
+    printf("end of test for left rotation\n");
+    printf("\n");
+
+    printf("Test for right rotation\n");
+    printf("level order before rotation\n");
+    print_bst_level_order(n10);
+    printf("\n");
+    right_rotate(n10);
+    printf("level order after rotation\n");
+    print_bst_level_order(n5);
     return 0;
 
 }
