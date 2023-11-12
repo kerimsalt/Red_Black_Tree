@@ -25,8 +25,15 @@ private:
   uint size;       // number of nodes
   int min_key;
   int max_key;
-};
 
+public:
+void setRoot(Node *root){
+  this->root = root;
+}
+
+Node* getRoot(){
+  return this->root;
+}
 
 void print_bst_level_order(Node *node){
     std::vector<Node> nodes_list;
@@ -82,7 +89,7 @@ void print_bst_level_order(Node *node){
 
 void right_rotate(Node *x){
   Node *left_child_of_rotator = x->left; // the left child of x
-
+  
   if (left_child_of_rotator != NULL)
   {
     // right child of x's left subtree, becomes the new left child of x
@@ -112,9 +119,9 @@ void right_rotate(Node *x){
       }
     }
     else{
-      // TODO: We need to make it officially the root of the subtree!!!
       // x is the root
       // we make the right child of x, the new root
+      this->root = left_child_of_rotator;
       left_child_of_rotator->color = 'b';
       // root's color must be black thus, we set the color to black
     }
@@ -156,9 +163,9 @@ void left_rotate(Node *x){
       }
     }
     else{
-      // TODO: We need to make it officially the root of the subtree!!!
       // x is the root
       // we make the right child of x, the new root
+      this->root = right_child_of_rotator;
       right_child_of_rotator->color = 'b';
       // root's color must be black thus, we set the color to black
     }
@@ -168,7 +175,10 @@ void left_rotate(Node *x){
   }
 };
 
-int main(){    
+};
+
+int main(){
+    MemTable m1;    
     Node *n5 = new Node; // root node --> 5
     n5->key = 5;
     Node *n10 = new Node; // 10 --> right of 5
@@ -204,15 +214,23 @@ int main(){
   
     Node *t2 = new Node;
     t2->key = 2;
+    m1.setRoot(n5);  // Set the root to 5
+
     printf("Test for left rotation\n");
     printf("level order before rotation\n");
-    print_bst_level_order(n5);
+    m1.print_bst_level_order(n5);
     
-    left_rotate(n5);
+    m1.left_rotate(n5);
     printf("level order after rotation\n");
-    print_bst_level_order(n10);
+    m1.print_bst_level_order(n10);
     printf("\n");
     std::cout << "10's right: " << n10->right->key << std::endl;
+    printf("\n");
+    if (m1.getRoot()->key == 10)
+    {
+      printf("Root change worked for left rotation");
+    }
+    
     
     printf("\n");
     std::cout << "10's left: " << n10->left->key << std::endl;
@@ -221,11 +239,17 @@ int main(){
 
     printf("Test for right rotation\n");
     printf("level order before rotation\n");
-    print_bst_level_order(n10);
+    m1.print_bst_level_order(n10);
     printf("\n");
-    right_rotate(n10);
+    m1.right_rotate(n10);
     printf("level order after rotation\n");
-    print_bst_level_order(n5);
+    m1.print_bst_level_order(n5);
+    printf("\n");
+
+    if (m1.getRoot()->key == 5)
+    {
+      printf("Root change worked for right rotation");
+    }
     return 0;
 
 }
